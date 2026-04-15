@@ -8,7 +8,7 @@ class ToDoController extends GetxController {
   RxDouble opacity = 0.0.obs;
   RxList<TodoItem> itemList = <TodoItem>[].obs;
 
-  List<TodoItem> get favList => itemList.where((e) => e.isFav.value).toList();
+  List<TodoItem> get favList => itemList.where((e) => e.isFav == true).toList();
 
   @override
   void onClose() {
@@ -22,7 +22,7 @@ class ToDoController extends GetxController {
 
   void onDeleteItem(TodoItem item) {
     itemList.remove(item);
-    Get.snackbar(item.title, "$item deleted from the list");
+    Get.snackbar(item.title!, "$item deleted from the list");
   }
 
   void addToList(String item) {
@@ -36,12 +36,14 @@ class ToDoController extends GetxController {
         snackPosition: SnackPosition.BOTTOM,
       );
     } else {
-      itemList.add(TodoItem(text));
+      itemList.add(TodoItem(title: text));
     }
     nameController.clear();
   }
 
   void toggleItem(TodoItem item) {
-    item.isFav.toggle();
+    item.isFav = !item.isFav!;
+    itemList.refresh();
+    print(itemList.where((p0) => p0.isFav == true));
   }
 }

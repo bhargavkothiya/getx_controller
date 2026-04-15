@@ -58,22 +58,17 @@ class ToDoScreen extends StatelessWidget {
                           return ListTile(
                             key: ValueKey(item),
                             leading: Text("${index + 1}"),
-                            title: Text(item.title),
+                            title: Text(item.title!),
                             trailing: Row(
                               mainAxisSize: MainAxisSize.min,
                               children: [
-                                Obx(() {
-                                  print("Add Item in fav list");
-                                  return IconButton(
-                                    onPressed: () {
-                                      toDoController.toggleItem(item);
-                                    },
-                                    icon: Icon(Icons.favorite_rounded),
-                                    color: item.isFav.value
-                                        ? Colors.red
-                                        : Colors.grey,
-                                  );
-                                }),
+                                IconButton(
+                                  onPressed: () {
+                                    toDoController.toggleItem(item);
+                                  },
+                                  icon: Icon(Icons.favorite_rounded),
+                                  color: item.isFav! ? Colors.red : Colors.grey,
+                                ),
                                 SizedBox(width: 20),
                                 GestureDetector(
                                   onTap: () =>
