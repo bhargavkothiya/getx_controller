@@ -1,8 +1,8 @@
-class TodoItem {
+class ToDoItem {
   String? title;
   bool? isFav;
 
-  TodoItem({this.title, this.isFav});
+  ToDoItem({this.title, this.isFav});
 
   @override
   String toString() {
@@ -13,7 +13,7 @@ class TodoItem {
     return {"title": title, "isFav": isFav};
   }
 
-  factory TodoItem.fromJson(Map<String, dynamic> json) {
-    return TodoItem(title: json["title"], isFav: json["isFav"]);
+  factory ToDoItem.fromJson(Map<String, dynamic> json) {
+    return ToDoItem(title: json["title"], isFav: json["isFav"]);
   }
 }

@@ -20,7 +20,7 @@ class FavListScreen extends StatelessWidget {
             final item = favList[index];
             return ListTile(
               leading: Text("${index + 1}"),
-              title: Text(item.title!),
+              title: Text(item.title ?? ""),
             );
           },
         );

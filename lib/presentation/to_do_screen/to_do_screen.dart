@@ -1,4 +1,6 @@
 import 'package:demo_project/presentation/to_do_screen/controller/to_do_controller.dart';
+import 'package:demo_project/presentation/to_do_screen/widget/add_item_field.dart';
+import 'package:demo_project/presentation/to_do_screen/widget/search_field.dart';
 import 'package:demo_project/routes/app_routes.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -25,30 +27,14 @@ class ToDoScreen extends StatelessWidget {
         padding: const EdgeInsets.symmetric(horizontal: 15),
         child: Column(
           children: [
-            TextField(
-              controller: toDoController.nameController,
-              decoration: InputDecoration(
-                focusColor: Colors.transparent,
-                contentPadding: EdgeInsets.only(left: 20),
-                border: OutlineInputBorder(
-                  borderSide: BorderSide(color: Colors.black),
-                ),
-              ),
-            ),
-            ElevatedButton(
-              onPressed: () {
-                final item = toDoController.nameController.text.trim();
-                if (item.isNotEmpty) {
-                  toDoController.addToList(item);
-                }
-              },
-              child: Text("Add to list"),
-            ),
+            Obx(() => searchField(controller: toDoController)),
+            SizedBox(height: Get.height * 0.05),
+            addItemField(toDoController: toDoController),
             SizedBox(height: 5),
             Expanded(
               child: Obx(() {
                 print("Delete Item in fav list");
-                final items = toDoController.itemList;
+                final items = toDoController.filteredList;
                 return items.length == 0
                     ? Center(child: Text("Your List is Empty"))
                     : ListView.builder(
@@ -58,7 +44,7 @@ class ToDoScreen extends StatelessWidget {
                           return ListTile(
                             key: ValueKey(item),
                             leading: Text("${index + 1}"),
-                            title: Text(item.title!),
+                            title: Text(item.title ?? ""),
                             trailing: Row(
                               mainAxisSize: MainAxisSize.min,
                               children: [
@@ -67,7 +53,9 @@ class ToDoScreen extends StatelessWidget {
                                     toDoController.toggleItem(item);
                                   },
                                   icon: Icon(Icons.favorite_rounded),
-                                  color: item.isFav! ? Colors.red : Colors.grey,
+                                  color: item.isFav ?? false
+                                      ? Colors.red
+                                      : Colors.grey,
                                 ),
                                 SizedBox(width: 20),
                                 GestureDetector(

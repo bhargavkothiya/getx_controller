@@ -1,14 +1,16 @@
 import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
 
-import '../model/todo_item.dart';
+import '../../../data/model/todo_item.dart';
 
 class ToDoController extends GetxController {
   final TextEditingController nameController = TextEditingController();
+  final TextEditingController searchController = TextEditingController();
+  RxString searchQuery = "".obs;
   RxDouble opacity = 0.0.obs;
-  RxList<TodoItem> itemList = <TodoItem>[].obs;
+  RxList<ToDoItem> itemList = <ToDoItem>[].obs;
 
-  List<TodoItem> get favList => itemList.where((e) => e.isFav == true).toList();
+  List<ToDoItem> get favList => itemList.where((e) => e.isFav == true).toList();
 
   @override
   void onClose() {
@@ -16,13 +18,26 @@ class ToDoController extends GetxController {
     super.onClose();
   }
 
+  List<ToDoItem> get filteredList {
+    if (searchQuery.isEmpty) {
+      return itemList;
+    }
+    return itemList
+        .where(
+          (e) => (e.title ?? "").toLowerCase().contains(
+            searchQuery.value.toLowerCase(),
+          ),
+        )
+        .toList();
+  }
+
   void setOpticity(double value) {
     opacity.value = value;
   }
 
-  void onDeleteItem(TodoItem item) {
+  void onDeleteItem(ToDoItem item) {
     itemList.remove(item);
-    Get.snackbar(item.title!, "$item deleted from the list");
+    Get.snackbar(item.title ?? "", "$item deleted from the list");
   }
 
   void addToList(String item) {
@@ -36,13 +51,13 @@ class ToDoController extends GetxController {
         snackPosition: SnackPosition.BOTTOM,
       );
     } else {
-      itemList.add(TodoItem(title: text));
+      itemList.add(ToDoItem(title: text));
     }
     nameController.clear();
   }
 
-  void toggleItem(TodoItem item) {
-    item.isFav = !item.isFav!;
+  void toggleItem(ToDoItem item) {
+    item.isFav = !(item.isFav ?? false);
     itemList.refresh();
     print(itemList.where((p0) => p0.isFav == true));
   }
