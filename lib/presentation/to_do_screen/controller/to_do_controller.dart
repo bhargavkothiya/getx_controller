@@ -32,7 +32,7 @@ class ToDoController extends GetxController {
     if (itemList.any((e) => e.title == text)) {
       Get.snackbar(
         "Error",
-        "Already Exist in list",
+        "Already Exist in the list",
         snackPosition: SnackPosition.BOTTOM,
       );
     } else {
