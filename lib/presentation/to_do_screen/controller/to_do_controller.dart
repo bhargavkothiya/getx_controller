@@ -15,6 +15,7 @@ class ToDoController extends GetxController {
   @override
   void onClose() {
     nameController.dispose();
+    searchController.dispose();
     super.onClose();
   }
 

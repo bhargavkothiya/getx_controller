@@ -27,7 +27,7 @@ class ToDoScreen extends StatelessWidget {
         padding: const EdgeInsets.symmetric(horizontal: 15),
         child: Column(
           children: [
-            Obx(() => searchField(controller: toDoController)),
+            searchField(controller: toDoController),
             SizedBox(height: Get.height * 0.05),
             addItemField(toDoController: toDoController),
             SizedBox(height: 5),
