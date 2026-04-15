@@ -36,6 +36,14 @@ class ToDoController extends GetxController {
     opacity.value = value;
   }
 
+  void updateItem(ToDoItem item, String newTitle) {
+    final index = itemList.indexOf(item);
+    if (index != -1) {
+      itemList[index].title = newTitle;
+      itemList.refresh();
+    }
+  }
+
   void onDeleteItem(ToDoItem item) {
     itemList.remove(item);
     Get.snackbar(item.title ?? "", "$item deleted from the list");

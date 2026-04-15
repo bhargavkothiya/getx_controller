@@ -1,8 +1,9 @@
 class ToDoItem {
   String? title;
   bool? isFav;
+  bool? isDone;
 
-  ToDoItem({this.title, this.isFav});
+  ToDoItem({this.title, this.isFav, this.isDone});
 
   @override
   String toString() {
@@ -10,7 +11,7 @@ class ToDoItem {
   }
 
   Map<String, dynamic> toJson() {
-    return {"title": title, "isFav": isFav};
+    return {"title": title, "isFav": isFav ?? false, "isDone": isDone ?? false};
   }
 
   factory ToDoItem.fromJson(Map<String, dynamic> json) {

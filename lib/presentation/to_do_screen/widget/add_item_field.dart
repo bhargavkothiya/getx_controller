@@ -6,15 +6,13 @@ Widget addItemField({required ToDoController toDoController}) {
     children: [
       Flexible(
         flex: 4,
-        child: Container(
-          child: TextField(
-            controller: toDoController.nameController,
-            decoration: InputDecoration(
-              focusColor: Colors.transparent,
-              contentPadding: EdgeInsets.only(left: 20),
-              border: OutlineInputBorder(
-                borderSide: BorderSide(color: Colors.black),
-              ),
+        child: TextField(
+          controller: toDoController.nameController,
+          decoration: InputDecoration(
+            focusColor: Colors.transparent,
+            contentPadding: EdgeInsets.only(left: 20),
+            border: OutlineInputBorder(
+              borderSide: BorderSide(color: Colors.black),
             ),
           ),
         ),
