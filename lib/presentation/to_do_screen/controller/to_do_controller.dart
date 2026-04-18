@@ -1,7 +1,10 @@
 import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
+import 'package:hive/hive.dart';
 
 import '../../../data/model/todo_item.dart';
+
+enum TaskFilter { all, active, completed }
 
 class ToDoController extends GetxController {
   final TextEditingController nameController = TextEditingController();
@@ -9,8 +12,21 @@ class ToDoController extends GetxController {
   RxString searchQuery = "".obs;
   RxDouble opacity = 0.0.obs;
   RxList<ToDoItem> itemList = <ToDoItem>[].obs;
+  Rx<TaskFilter> currentFilter = TaskFilter.all.obs;
+  final Box<ToDoItem> todoBox = Hive.box<ToDoItem>('todo_box');
 
   List<ToDoItem> get favList => itemList.where((e) => e.isFav == true).toList();
+
+  @override
+  void onInit() {
+    // TODO: implement onInit
+    super.onInit();
+    loadTasks();
+  }
+
+  void loadTasks() {
+    itemList.assignAll(todoBox.values.toList());
+  }
 
   @override
   void onClose() {
@@ -19,17 +35,26 @@ class ToDoController extends GetxController {
     super.onClose();
   }
 
+  void isDoneToggle(ToDoItem item) {
+    item.isDone = !(item.isDone ?? false);
+    item.save();
+    itemList.refresh();
+  }
+
   List<ToDoItem> get filteredList {
-    if (searchQuery.isEmpty) {
-      return itemList;
+    var listAfterSearch = itemList.where((e) {
+      return e.title!.toLowerCase().contains(searchQuery.value.toLowerCase());
+    }).toList();
+
+    switch (currentFilter.value) {
+      case TaskFilter.active:
+        return listAfterSearch.where((e) => e.isDone == false).toList();
+      case TaskFilter.completed:
+        return listAfterSearch.where((e) => e.isDone == true).toList();
+      case TaskFilter.all:
+      default:
+        return listAfterSearch;
     }
-    return itemList
-        .where(
-          (e) => (e.title ?? "").toLowerCase().contains(
-            searchQuery.value.toLowerCase(),
-          ),
-        )
-        .toList();
   }
 
   void setOpticity(double value) {
@@ -40,33 +65,43 @@ class ToDoController extends GetxController {
     final index = itemList.indexOf(item);
     if (index != -1) {
       itemList[index].title = newTitle;
+      item.save();
       itemList.refresh();
     }
   }
 
   void onDeleteItem(ToDoItem item) {
     itemList.remove(item);
-    Get.snackbar(item.title ?? "", "$item deleted from the list");
+    // Get.snackbar(item.title ?? "", "$item deleted from the list");
+    item.delete();
   }
 
-  void addToList(String item) {
-    final text = item.trim();
+  void addToList(String name) {
+    final text = name.trim();
     if (text.isEmpty) return;
 
     if (itemList.any((e) => e.title == text)) {
       Get.snackbar(
-        "Error",
+        text,
         "Already Exist in the list",
         snackPosition: SnackPosition.BOTTOM,
       );
     } else {
-      itemList.add(ToDoItem(title: text));
+      final newItem = ToDoItem(title: name);
+      itemList.add(newItem);
+      todoBox.add(newItem);
+      Get.snackbar(
+        text,
+        "Added to the list",
+        snackPosition: SnackPosition.BOTTOM,
+      );
     }
     nameController.clear();
   }
 
-  void toggleItem(ToDoItem item) {
+  void toggleFav(ToDoItem item) {
     item.isFav = !(item.isFav ?? false);
+    item.save();
     itemList.refresh();
     print(itemList.where((p0) => p0.isFav == true));
   }
