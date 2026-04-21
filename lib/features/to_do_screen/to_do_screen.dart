@@ -1,8 +1,8 @@
-import 'package:demo_project/presentation/to_do_screen/controller/to_do_controller.dart';
-import 'package:demo_project/presentation/to_do_screen/widget/add_item_field.dart';
-import 'package:demo_project/presentation/to_do_screen/widget/edit_box_dialog_box.dart';
-import 'package:demo_project/presentation/to_do_screen/widget/filter_button.dart';
-import 'package:demo_project/presentation/to_do_screen/widget/search_field.dart';
+import 'package:demo_project/features/to_do_screen/controller/to_do_controller.dart';
+import 'package:demo_project/features/to_do_screen/widget/add_item_field.dart';
+import 'package:demo_project/features/to_do_screen/widget/edit_box_dialog_box.dart';
+import 'package:demo_project/features/to_do_screen/widget/filter_button.dart';
+import 'package:demo_project/features/to_do_screen/widget/search_field.dart';
 import 'package:demo_project/routes/app_routes.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -10,7 +10,7 @@ import 'package:get/get.dart';
 class ToDoScreen extends StatelessWidget {
   ToDoScreen({super.key});
 
-  final ToDoController toDoController = Get.find();
+  final ToDoController toDoController = Get.put(ToDoController());
 
   @override
   Widget build(BuildContext context) {
